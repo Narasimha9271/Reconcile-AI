@@ -24,4 +24,5 @@ Copy the variables in [`.env.ai.example`](.env.ai.example) to your local `.env`,
 - [Security](docs/SECURITY.md)
 - [AI invoice extraction](docs/AI-INVOICE-EXTRACTION.md)
 - [Sample data walkthrough](docs/SAMPLE-DATA.md)
+- [Duplicate invoice prevention](docs/DUPLICATE-INVOICE-PREVENTION.md)
 - API: [http://localhost:8000/docs](http://localhost:8000/docs)

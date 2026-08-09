@@ -11,6 +11,7 @@ The full set of values is in [`samples/demo-data.json`](../samples/demo-data.jso
 3. Create purchase order:
    - Vendor: `Northwind Office Supplies`
    - PO number: `PO-2026-1001`
+   - PO currency: `USD`
    - Line description: `Ergonomic office chairs`
    - Quantity: `5`
    - Unit price: `120.00`
