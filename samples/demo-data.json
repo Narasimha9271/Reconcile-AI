@@ -1,0 +1,35 @@
+{
+  "exact_match": {
+    "vendor": { "name": "Northwind Office Supplies", "external_ref": "NW-001" },
+    "purchase_order": {
+      "number": "PO-2026-1001",
+      "currency": "USD",
+      "line": { "description": "Ergonomic office chairs", "quantity": 5, "unit_price": 120.00 },
+      "expected_total": 600.00
+    },
+    "invoice": { "number": "INV-NW-1001", "vendor_name": "Northwind Office Supplies", "amount": 600.00, "currency": "USD" },
+    "expected_result": "MATCHED, 100% confidence"
+  },
+  "amount_exception": {
+    "vendor": { "name": "Contoso Logistics", "external_ref": "CL-002" },
+    "purchase_order": {
+      "number": "PO-2026-1002",
+      "currency": "USD",
+      "line": { "description": "Freight delivery", "quantity": 1, "unit_price": 350.00 },
+      "expected_total": 350.00
+    },
+    "invoice": { "number": "INV-CL-1002", "vendor_name": "Contoso Logistics", "amount": 425.00, "currency": "USD" },
+    "expected_result": "REVIEW_REQUIRED, amount differs"
+  },
+  "vendor_exception": {
+    "vendor": { "name": "Fabrikam IT Services", "external_ref": "FIT-003" },
+    "purchase_order": {
+      "number": "PO-2026-1003",
+      "currency": "USD",
+      "line": { "description": "Managed support subscription", "quantity": 1, "unit_price": 900.00 },
+      "expected_total": 900.00
+    },
+    "invoice": { "number": "INV-FIT-1003", "vendor_name": "Fabrikam Technology", "amount": 900.00, "currency": "USD" },
+    "expected_result": "REVIEW_REQUIRED, vendor differs"
+  }
+}

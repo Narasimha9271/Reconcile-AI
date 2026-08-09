@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     google_callback_url: str = Field(default="http://localhost:4000/api/auth/google/callback", validation_alias=AliasChoices("GOOGLE_CALLBACK_URL", "RECONCILEAI_GOOGLE_CALLBACK_URL"))
     google_allowed_email: str | None = Field(default=None, validation_alias=AliasChoices("GOOGLE_ALLOWED_EMAIL", "RECONCILEAI_GOOGLE_ALLOWED_EMAIL"))
     google_finance_approver_emails: str | None = Field(default=None, validation_alias=AliasChoices("GOOGLE_FINANCE_APPROVER_EMAILS", "RECONCILEAI_GOOGLE_FINANCE_APPROVER_EMAILS"))
+    openai_api_key: str | None = Field(default=None, validation_alias=AliasChoices("OPENAI_API_KEY", "RECONCILEAI_OPENAI_API_KEY"))
+    openai_model: str = Field(default="gpt-4o-mini", validation_alias=AliasChoices("OPENAI_MODEL", "RECONCILEAI_OPENAI_MODEL"))
 
 @lru_cache
 def get_settings() -> Settings:

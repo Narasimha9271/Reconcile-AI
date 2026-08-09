@@ -1,0 +1,1 @@
+.fileLabel{display:grid;gap:6px;color:var(--muted);font-size:12px;font-weight:700}.fileLabel input{padding:8px}.extractForm{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}.extractionResult{display:grid;gap:4px;padding:10px;margin:0 0 12px;background:var(--sky);border-radius:8px;color:#2763ae;font-size:12px}.extractionResult small{color:var(--muted)}
