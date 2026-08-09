@@ -1,0 +1,9 @@
+fastapi<0.141,>=0.140
+pydantic-settings<3,>=2.14
+uvicorn<0.52,>=0.51
+sqlalchemy<2.1,>=2.0
+psycopg[binary]<3.4,>=3.3
+
+[dev]
+httpx<0.29,>=0.28
+pytest<10,>=9.1

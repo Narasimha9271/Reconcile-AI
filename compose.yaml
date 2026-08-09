@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: reconcileai
+      POSTGRES_USER: reconcileai
+      POSTGRES_PASSWORD: reconcileai_dev_only
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reconcileai -d reconcileai"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./services/api/migrations:/docker-entrypoint-initdb.d:ro
+  api:
+    build: ./services/api
+    ports: ["8000:8000", "4000:8000"]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      RECONCILEAI_ENVIRONMENT: development
+      RECONCILEAI_DATABASE_URL: postgresql+psycopg://reconcileai:reconcileai_dev_only@postgres:5432/reconcileai
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./services/api:/app
+  web:
+    build: ./apps/web
+    ports: ["3000:3000"]
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      NEXT_PUBLIC_AUTH_BASE_URL: http://localhost:4000
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:

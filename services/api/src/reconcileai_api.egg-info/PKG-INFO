@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: reconcileai-api
+Version: 0.1.0
+Requires-Python: >=3.12
+Requires-Dist: fastapi<0.141,>=0.140
+Requires-Dist: pydantic-settings<3,>=2.14
+Requires-Dist: uvicorn<0.52,>=0.51
+Requires-Dist: sqlalchemy<2.1,>=2.0
+Requires-Dist: psycopg[binary]<3.4,>=3.3
+Provides-Extra: dev
+Requires-Dist: httpx<0.29,>=0.28; extra == "dev"
+Requires-Dist: pytest<10,>=9.1; extra == "dev"

@@ -1,0 +1,12 @@
+[project]
+name = "reconcileai-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["fastapi>=0.140,<0.141", "pydantic-settings>=2.14,<3", "uvicorn>=0.51,<0.52", "sqlalchemy>=2.0,<2.1", "psycopg[binary]>=3.3,<3.4", "python-multipart>=0.0.32,<0.1", "httpx>=0.28,<0.29", "itsdangerous>=2.2,<3"]
+
+[project.optional-dependencies]
+dev = ["httpx>=0.28,<0.29", "pytest>=9.1,<10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
