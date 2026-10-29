@@ -9,7 +9,7 @@
 3. Restart:
 
    ```powershell
-   cd "C:\Users\narasimha\Desktop\Reconcile AI"
+   # Run from the cloned Reconcile-AI repository root.
    docker compose up --build -d
    ```
 

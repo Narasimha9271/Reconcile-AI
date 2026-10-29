@@ -24,7 +24,7 @@ This adapter runs locally and never transmits invoice text externally.
 Open the database shell:
 
 ```powershell
-cd "C:\Users\narasimha\Desktop\Reconcile AI"
+# Run from the cloned Reconcile-AI repository root.
 docker compose exec postgres psql -U reconcileai -d reconcileai
 ```
 

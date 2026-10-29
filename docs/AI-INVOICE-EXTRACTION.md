@@ -22,12 +22,12 @@ The reconciliation module independently compares the vendor, currency, and amoun
 
 ## Enable it locally
 
-1. Open the existing local file `C:\Users\narasimha\Desktop\Reconcile AI\.env`.
+1. Open `.env` in the repository root; create it from `.env.example` if needed.
 2. Add the values from `.env.ai.example`, replacing `your_openai_api_key_here` with a key from the OpenAI Platform. Do not paste the key into source code or commit it.
 3. Restart the stack:
 
 ```powershell
-cd "C:\Users\narasimha\Desktop\Reconcile AI"
+# Run from the cloned Reconcile-AI repository root.
 docker compose up --build
 ```
 
