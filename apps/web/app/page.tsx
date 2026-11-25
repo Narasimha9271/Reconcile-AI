@@ -52,7 +52,7 @@ export default function Home() {
   async function extractInvoice(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = new FormData(event.currentTarget); const file = form.get("file");
     if (!(file instanceof File) || file.size === 0) { setNotice("Choose a PDF, PNG, JPEG, or WEBP invoice first."); return; }
-    setBusy(true); setNotice("Reading invoice with AI...");
+    setBusy(true); setCaseError(null); setNotice("Reading invoice with AI...");
     try {
       const response = await fetch(`${API}/v1/ai/extract-invoice-upload`, { method: "POST", credentials: "include", body: form });
       if (!response.ok) throw new Error((await response.json()).detail ?? "AI extraction failed");
@@ -62,7 +62,38 @@ export default function Home() {
       setNotice("AI extracted candidate fields. Review them before running reconciliation.");
     } catch (error) { setNotice((error as Error).message); } finally { setBusy(false); }
   }
-  async function createCase(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); setBusy(true); setCaseError(null); try { await api("/v1/reconciliations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ purchase_order_id: form.get("po"), invoice_number: invoiceDraft.invoice, invoice_amount: invoiceDraft.amount, currency: invoiceDraft.currency, vendor_name: invoiceDraft.vendorName }) }); event.currentTarget.reset(); setExtraction(null); setInvoiceDraft({ invoice: "", vendorName: "", amount: "", currency: "USD" }); await refresh(); } catch (error) { const message = (error as Error).message; setCaseError(message); setNotice(message); } finally { setBusy(false); } }
+  async function createCase(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const fields = new FormData(form);
+    setBusy(true);
+    setCaseError(null);
+    try {
+      await api("/v1/reconciliations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          purchase_order_id: fields.get("po"), invoice_number: invoiceDraft.invoice,
+          invoice_amount: invoiceDraft.amount, currency: invoiceDraft.currency,
+          vendor_name: invoiceDraft.vendorName,
+        }),
+      });
+    } catch (error) {
+      const message = (error as Error).message;
+      setCaseError(message);
+      setNotice(message);
+      setBusy(false);
+      return;
+    }
+    try {
+      form.reset();
+      setExtraction(null);
+      setInvoiceDraft({ invoice: "", vendorName: "", amount: "", currency: "USD" });
+      await refresh();
+    } finally {
+      setBusy(false);
+    }
+  }
   async function decide(id: string, decision: "APPROVED" | "REJECTED") { await submit(`/v1/reconciliations/${id}/decision`, { decision }); }
   async function logout() { await fetch(`${AUTH}/api/auth/google/logout`, { method: "POST", credentials: "include" }); setUser(null); setVendors([]); setPurchaseOrders([]); setCases([]); setReady(true); }
 

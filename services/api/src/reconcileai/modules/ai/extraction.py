@@ -1,8 +1,6 @@
 import base64
 import json
-import re
 from io import BytesIO
-from decimal import Decimal
 from typing import Any
 
 import httpx
@@ -10,6 +8,7 @@ from pypdf import PdfReader
 from pydantic import BaseModel, ConfigDict, Field
 
 from reconcileai.config import get_settings
+from .local_extraction import extract_invoice
 
 MAX_DOCUMENT_BYTES = 8 * 1024 * 1024
 ALLOWED_CONTENT_TYPES = {"application/pdf", "image/jpeg", "image/png", "image/webp"}
@@ -22,15 +21,6 @@ class InvoiceFields(BaseModel):
     currency: str = Field(pattern=r"^[A-Z]{3}$")
     confidence: float = Field(ge=0, le=1)
     extraction_notes: str
-
-
-def extract_invoice(text: str) -> dict:
-    """Safe local fallback for text-based documents; no approval logic lives here."""
-    number = re.search(r"(?:invoice\s*(?:number|#)?|inv#)\s*[:#-]?\s*([A-Za-z0-9-]+)", text, re.I)
-    amount = re.search(r"(?:total|amount due)\s*[:$]?\s*([0-9,]+(?:\.\d{1,2})?)", text, re.I)
-    currency = re.search(r"\b(USD|EUR|GBP|INR)\b", text)
-    vendor = re.search(r"(?:vendor|from)\s*:\s*(.+)", text, re.I)
-    return {"invoice_number": number.group(1) if number else None, "vendor_name": vendor.group(1).strip() if vendor else None, "total_amount": float(Decimal(amount.group(1).replace(",", ""))) if amount else None, "currency": currency.group(1) if currency else "USD", "provider": "local-structured-extractor", "confidence": 0.55}
 
 
 def validate_upload(content: bytes, content_type: str) -> None:
