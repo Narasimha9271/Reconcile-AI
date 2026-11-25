@@ -5,7 +5,7 @@ An invoice and purchase-order reconciliation workspace built with **FastAPI, Pos
 ## What it demonstrates
 
 - Vendor and purchase-order management with invoice reconciliation.
-- PDF and image intake, structured extraction through OpenAI, and a local fallback for text-based PDFs.
+- PDF and image intake, structured extraction through Groq, and a local fallback for text-based PDFs.
 - Explainable checks for vendor, currency, and amount, plus duplicate-invoice prevention.
 - PostgreSQL tenant row-level security, Google sign-in, and role-based review workflows.
 - A review step between extracted data and a financial approval decision.
@@ -18,14 +18,14 @@ flowchart LR
     API --> DB[(PostgreSQL / tenant RLS)]
     API --> Extract[Document extraction]
     Extract --> Local[Local text extractor]
-    Extract --> OpenAI[OpenAI structured extraction]
+    Extract --> Groq[Groq structured extraction]
     API --> Match[Deterministic reconciliation]
     Match --> Review[Human review and approval]
 ```
 
 ## Run locally
 
-You need Git and Docker with Docker Compose v2. The dashboard sign-in flow also requires Google OAuth credentials; OpenAI is optional for text-based PDF extraction.
+You need Git and Docker with Docker Compose v2. The dashboard sign-in flow also requires Google OAuth credentials; Groq is optional for text-based PDF extraction.
 
 ```sh
 git clone https://github.com/Narasimha9271/Reconcile-AI.git
@@ -34,7 +34,7 @@ cd Reconcile-AI
 
 1. Copy [`.env.example`](.env.example) to `.env` in the repository root.
 2. Configure Google OAuth using [the setup guide](docs/GOOGLE-OAUTH.md). Set the allowed email addresses and a generated session secret. Set finance approver emails if you want to exercise approval actions.
-3. Optionally set `OPENAI_API_KEY` for AI extraction. See [extraction behavior and limits](docs/AI-INVOICE-EXTRACTION.md).
+3. Optionally set `GROQ_API_KEY` for AI extraction. See [extraction behavior and limits](docs/AI-INVOICE-EXTRACTION.md).
 4. Start the stack:
 
 ```sh
@@ -62,7 +62,7 @@ Follow the [demo walkthrough](docs/DEMO-WALKTHROUGH.md), [sample-data guide](doc
 
 ## Extraction behavior
 
-- With a configured API key, invoice data is sent to OpenAI for structured extraction.
+- With a configured API key, invoice data is sent to Groq for structured extraction.
 - Without a key, text-based PDFs use local extraction; images require a working key.
 - Uploaded documents are limited to 8 MB. Scanned PDFs should be exported as clear images for this version.
 - Extracted values are suggestions for review. The model does not approve or pay invoices.

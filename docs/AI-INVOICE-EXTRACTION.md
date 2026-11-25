@@ -10,9 +10,9 @@ ReconcileAI can accept an invoice PDF, PNG, JPEG, or WEBP file (maximum 8 MB) an
 - currency
 - extraction confidence and notes
 
-When `OPENAI_API_KEY` is configured, the API sends the document to the OpenAI Responses API and requests a strict JSON schema. Images use vision input. Text-based PDFs are parsed locally and supplied as text. A PDF without selectable text should be exported as a clear image for this version.
+When `GROQ_API_KEY` is configured, the API sends the document to the Groq Chat Completions API and validates the returned JSON fields. Images use vision input. Text-based PDFs are parsed locally and supplied as text. A PDF without selectable text should be exported as a clear image for this version.
 
-Without an API key, text-based PDFs use the existing local pattern extractor. If the OpenAI service is temporarily unavailable, text-based PDFs also fall back locally and show an `extraction_notes` warning. Image extraction requires a working API key.
+Without an API key, text-based PDFs use the existing local pattern extractor. If the Groq service is temporarily unavailable, text-based PDFs also fall back locally and show an `extraction_notes` warning. Image extraction requires a working API key.
 
 ## Safety design
 
@@ -23,7 +23,7 @@ The reconciliation module independently compares the vendor, currency, and amoun
 ## Enable it locally
 
 1. Open `.env` in the repository root; create it from `.env.example` if needed.
-2. Add the values from `.env.ai.example`, replacing `your_openai_api_key_here` with a key from the OpenAI Platform. Do not paste the key into source code or commit it.
+2. Add the values from `.env.ai.example`, replacing `your_groq_api_key_here` with a key from the Groq Platform. Do not paste the key into source code or commit it.
 3. Restart the stack:
 
 ```powershell
@@ -34,6 +34,10 @@ docker compose up --build
 4. Open `http://localhost:3000`, sign in, then create a vendor and purchase order.
 5. In **3. Extract & reconcile invoice**, choose an invoice file and select **Extract with AI**.
 6. Inspect and correct the filled invoice fields. Select the PO, then choose **Review & run reconciliation**.
+
+## Render setup
+
+Set `GROQ_API_KEY` in the web service's Environment settings and save and deploy. `GROQ_MODEL` optionally overrides the default vision model. After Google sign-in, upload the fictional sample PDF and check for the `groq:` provider label.
 
 ## API test
 
@@ -53,7 +57,7 @@ curl.exe -X POST "http://localhost:8000/v1/ai/extract-invoice-upload" `
   -F "file=@C:\path\to\a-real-invoice.pdf;type=application/pdf"
 ```
 
-Expected result: JSON with `provider` equal to `openai:<model>` when the key is configured, or `local-structured-extractor` for the fallback. The extracted values should appear in the dashboard form; they are not automatically approved.
+Expected result: JSON with `provider` equal to `groq:<model>` when the key is configured, or `local-structured-extractor` for the fallback. The extracted values should appear in the dashboard form; they are not automatically approved.
 
 ## Operational constraints
 

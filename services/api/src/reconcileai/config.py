@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     google_finance_approver_emails: str | None = Field(default=None, validation_alias=AliasChoices("GOOGLE_FINANCE_APPROVER_EMAILS", "RECONCILEAI_GOOGLE_FINANCE_APPROVER_EMAILS"))
     frontend_url: str = Field(default="http://localhost:3000", validation_alias=AliasChoices("FRONTEND_URL", "RECONCILEAI_FRONTEND_URL"))
     cors_allowed_origins: str = Field(default="http://localhost:3000,http://127.0.0.1:3000", validation_alias=AliasChoices("CORS_ALLOWED_ORIGINS", "RECONCILEAI_CORS_ALLOWED_ORIGINS"))
-    openai_api_key: str | None = Field(default=None, validation_alias=AliasChoices("OPENAI_API_KEY", "RECONCILEAI_OPENAI_API_KEY"))
-    openai_model: str = Field(default="gpt-4o-mini", validation_alias=AliasChoices("OPENAI_MODEL", "RECONCILEAI_OPENAI_MODEL"))
+    groq_api_key: str | None = Field(default=None, validation_alias=AliasChoices("GROQ_API_KEY", "RECONCILEAI_GROQ_API_KEY"))
+    groq_model: str = Field(default="qwen/qwen3.8-27b", validation_alias=AliasChoices("GROQ_MODEL", "RECONCILEAI_GROQ_MODEL"))
 
     @field_validator("database_url")
     @classmethod
