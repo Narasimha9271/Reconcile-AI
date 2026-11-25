@@ -5,8 +5,8 @@ import "./styles.css";
 import "./auth.css";
 import "./ai.css";
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
-const AUTH = process.env.NEXT_PUBLIC_AUTH_BASE_URL ?? "http://localhost:4000";
+const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+const AUTH = process.env.NEXT_PUBLIC_AUTH_BASE_URL ?? "";
 type Vendor = { id: string; name: string };
 type PurchaseOrder = { id: string; number: string };
 type Reconciliation = { id: string; invoiceNumber: string; invoiceAmount: string; vendorName: string; matchStatus: string; confidence: number; explanation: string; decision?: string };

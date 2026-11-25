@@ -58,7 +58,7 @@ async def callback(request: Request, code: str | None = None, state: str | None 
     finally:
         session.close()
     request.session["actor"] = {"user_id": str(user_id), "organization_id": str(DEMO_ORGANIZATION_ID), "role": role, "email": email, "name": identity.get("name") or email}
-    return RedirectResponse("http://localhost:3000/?signedIn=google", status_code=302)
+    return RedirectResponse(f"{settings.frontend_url.rstrip('/')}?signedIn=google", status_code=302)
 
 
 @router.post("/logout")

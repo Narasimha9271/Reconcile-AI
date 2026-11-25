@@ -13,6 +13,7 @@ from reconcileai.api.routers.google_auth import router as google_auth_router
 from reconcileai.api.routers.reconciliation import router as reconciliation_router
 from reconcileai.modules.documents.service import LocalDocumentStore
 from reconcileai.database import create_database
+from reconcileai.migrations import apply_migrations
 
 class CorrelationIdMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -22,16 +23,18 @@ class CorrelationIdMiddleware(BaseHTTPMiddleware):
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    if settings.environment == "production":
+        apply_migrations(settings.database_url)
     logging.basicConfig(level=logging.INFO)
     app = FastAPI(title="ReconcileAI API", version=settings.version)
     app.state.settings = settings
     app.state.document_store = LocalDocumentStore(settings.document_storage_path)
     app.state.database = create_database()
     app.add_middleware(SessionMiddleware, secret_key=settings.session_secret, same_site="lax", https_only=settings.environment == "production")
-    # Local browser dashboard. Production replaces this allow-list with deployed UI origins.
+    allowed_origins = [origin.strip().rstrip("/") for origin in settings.cors_allowed_origins.split(",") if origin.strip()]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+        allow_origins=allowed_origins,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
         allow_headers=["Content-Type", "X-Development-User-Id", "X-Development-Organization-Id", "X-Development-Role"],
