@@ -1,0 +1,21 @@
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+const dir = path.join(__dirname, "../public/demo");
+const html = fs.readFileSync(path.join(dir,"index.html"), "utf8");
+const script = fs.readFileSync(path.join(dir,"demo.js"), "utf8");
+for (const action of ["approve","reject"]) test("isolated demo: " + action, () => {
+  const nodes = Object.fromEntries([...html.matchAll(/id="([^"]+)"/g)].map(m => [m[1], {}]));
+  vm.runInNewContext(script, {document:{getElementById:id=>nodes[id]}});
+  assert.ok(nodes.submit.disabled);
+  nodes.maya.onclick(); nodes.submit.onclick();
+  assert.ok(nodes.approve.disabled && nodes.reject.disabled);
+  nodes[action].onclick(); assert.match(nodes.status.textContent, /cannot review your own/);
+  nodes.leo.onclick(); assert.equal(nodes[action].disabled,false);
+  nodes[action].onclick(); assert.match(nodes.status.textContent, /by Leo · Submitted by Maya/);
+  assert.ok(nodes.approve.disabled && nodes.reject.disabled);
+  nodes.reset.onclick(); assert.ok(nodes.submit.disabled);
+  assert.match(nodes.status.textContent, /No invoice/);
+});

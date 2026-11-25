@@ -4,6 +4,18 @@ An invoice and purchase-order reconciliation workspace built with **FastAPI, Pos
 
 ## What it demonstrates
 
+**Visitor test login:** [Try the public demo](https://reconcileai-web.onrender.com/demo/index.html).
+No account or password required. Enter as Maya, submit the sample invoice, then
+switch to Leo to approve or reject the INR 250 discrepancy. Reset to try the
+other decision. This browser-only simulation uses no company data or live AI.
+
+**Live review rule:** Google sign-in is still required for the real workspace.
+Only a different finance approver from the same organization can decide a case.
+An admin role alone is insufficient. Older pending invoices without a recorded
+submitter are locked; past decisions and duplicate protection are preserved.
+For an existing local Compose database, apply `008_independent_invoice_review.sql`
+to the existing database before running the new API. Render applies it on startup.
+
 - Vendor and purchase-order management with invoice reconciliation.
 - PDF and image intake, structured extraction through Groq, and a local fallback for text-based PDFs.
 - Explainable checks for vendor, currency, and amount, plus duplicate-invoice prevention.

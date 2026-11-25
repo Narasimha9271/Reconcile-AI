@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>Public demo | ReconcileAI</title><link rel="stylesheet" href="./demo.css"><script defer src="./demo.js"></script></head>
+<body><main><header><b>ReconcileAI</b><a href="/">Company sign-in</a></header>
+<p class="eyebrow">PUBLIC DEMO · SAMPLE DATA ONLY</p><h1>Who should review this bill?</h1>
+<p>Try the invoice workflow without a Google account. This simulation runs in your tab. It never reads, uploads, or approves company invoices. Refresh to start over.</p>
+<section><h2>1. Test login</h2><p>Start as Maya to submit the sample, then switch to Leo to review it. Both are fictional finance approvers.</p>
+<div class="buttons"><button id="maya">Enter as Maya</button><button id="leo">Enter as Leo</button></div><p id="identity">Not signed in to the demo.</p></section>
+<section><h2>2. Reconcile a sample invoice</h2><dl><dt>Supplier</dt><dd>Colgate (sample)</dd><dt>Purchase order</dt><dd>PO-501 · 100 × ₹10.00 = ₹1,000.00</dd><dt>Invoice</dt><dd>INV-DEMO-0502 · 100 × ₹12.50 = ₹1,250.00</dd></dl>
+<button id="submit" disabled>Submit sample invoice</button></section>
+<section><h2>3. Review queue</h2><p id="status" aria-live="polite">No invoice submitted yet.</p>
+<div class="buttons"><button id="approve" disabled>Approve</button><button id="reject" disabled>Reject</button></div></section>
+<footer><button id="reset">Reset demo</button></footer></main></body></html>
