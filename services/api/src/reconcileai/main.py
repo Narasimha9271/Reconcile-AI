@@ -1,4 +1,6 @@
 import logging
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
 from uuid import uuid4
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -52,6 +54,8 @@ def create_app() -> FastAPI:
     @app.get("/readyz", tags=["health"])
     async def readyz() -> dict[str, str]:
         return {"status": "ready", "service": settings.service_name, "environment": settings.environment}
+    if Path("/app/dashboard/index.html").is_file():
+        app.mount("/", StaticFiles(directory="/app/dashboard", html=True), name="dashboard")
     return app
 
 app = create_app()

@@ -1,0 +1,17 @@
+**
+!apps/
+!apps/web/
+!apps/web/app/
+!apps/web/app/**
+!apps/web/package.json
+!apps/web/next.config.js
+!apps/web/tsconfig.json
+!apps/web/next-env.d.ts
+!services/
+!services/api/
+!services/api/pyproject.toml
+!services/api/src/
+!services/api/src/**
+!services/api/migrations/
+!services/api/migrations/*.sql
+**/__pycache__/

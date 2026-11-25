@@ -1,5 +1,5 @@
 from functools import lru_cache
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     cors_allowed_origins: str = Field(default="http://localhost:3000,http://127.0.0.1:3000", validation_alias=AliasChoices("CORS_ALLOWED_ORIGINS", "RECONCILEAI_CORS_ALLOWED_ORIGINS"))
     openai_api_key: str | None = Field(default=None, validation_alias=AliasChoices("OPENAI_API_KEY", "RECONCILEAI_OPENAI_API_KEY"))
     openai_model: str = Field(default="gpt-4o-mini", validation_alias=AliasChoices("OPENAI_MODEL", "RECONCILEAI_OPENAI_MODEL"))
+
+    @field_validator("database_url")
+    @classmethod
+    def use_psycopg(cls, url: str) -> str:
+        return url.replace("postgresql://", "postgresql+psycopg://", 1) if url.startswith("postgresql://") else url
 
 @lru_cache
 def get_settings() -> Settings:

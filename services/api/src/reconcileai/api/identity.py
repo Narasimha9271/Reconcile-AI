@@ -18,7 +18,8 @@ def get_development_actor(
     x_development_organization_id: UUID | None = Header(default=None),
     x_development_role: str = Header(default="AP_ANALYST"),
 ) -> DevelopmentActor:
-    if x_development_user_id is not None and x_development_organization_id is not None:
+    if (request.app.state.settings.environment in {"development", "test"}
+            and x_development_user_id is not None and x_development_organization_id is not None):
         return DevelopmentActor(x_development_user_id, x_development_organization_id, x_development_role)
     actor = request.session.get("actor")
     if actor:

@@ -1,4 +1,5 @@
 import secrets
+import os
 from urllib.parse import urlencode
 from uuid import NAMESPACE_URL, UUID, uuid5
 
@@ -25,8 +26,13 @@ async def login(request: Request) -> RedirectResponse:
     settings = get_settings()
     state = secrets.token_urlsafe(32)
     request.session["google_oauth_state"] = state
-    query = urlencode({"client_id": settings.google_client_id, "redirect_uri": settings.google_callback_url, "response_type": "code", "scope": "openid email profile", "state": state, "prompt": "select_account"})
+    query = urlencode({"client_id": settings.google_client_id, "redirect_uri": callback_url(), "response_type": "code", "scope": "openid email profile", "state": state, "prompt": "select_account"})
     return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{query}", status_code=302)
+
+
+def callback_url() -> str:
+    origin = os.getenv("RENDER_EXTERNAL_URL")
+    return origin.rstrip("/") + "/api/auth/google/callback" if origin else get_settings().google_callback_url
 
 
 @router.get("/callback")
@@ -36,7 +42,7 @@ async def callback(request: Request, code: str | None = None, state: str | None 
     if not code or not state or not secrets.compare_digest(state, request.session.pop("google_oauth_state", "")):
         raise HTTPException(status_code=400, detail="Invalid Google OAuth state.")
     async with httpx.AsyncClient(timeout=15) as client:
-        token = await client.post("https://oauth2.googleapis.com/token", data={"code": code, "client_id": settings.google_client_id, "client_secret": settings.google_client_secret, "redirect_uri": settings.google_callback_url, "grant_type": "authorization_code"})
+        token = await client.post("https://oauth2.googleapis.com/token", data={"code": code, "client_id": settings.google_client_id, "client_secret": settings.google_client_secret, "redirect_uri": callback_url(), "grant_type": "authorization_code"})
         token.raise_for_status()
         profile = await client.get("https://openidconnect.googleapis.com/v1/userinfo", headers={"Authorization": f"Bearer {token.json()['access_token']}"})
         profile.raise_for_status()
@@ -58,7 +64,8 @@ async def callback(request: Request, code: str | None = None, state: str | None 
     finally:
         session.close()
     request.session["actor"] = {"user_id": str(user_id), "organization_id": str(DEMO_ORGANIZATION_ID), "role": role, "email": email, "name": identity.get("name") or email}
-    return RedirectResponse(f"{settings.frontend_url.rstrip('/')}?signedIn=google", status_code=302)
+    origin = os.getenv("RENDER_EXTERNAL_URL") or settings.frontend_url
+    return RedirectResponse(f"{origin.rstrip('/')}/?signedIn=google", status_code=302)
 
 
 @router.post("/logout")
